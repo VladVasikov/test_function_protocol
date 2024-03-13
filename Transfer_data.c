@@ -1,32 +1,62 @@
+#include "Transfer_data.h"
 
-int count_byte;
-int adr;
-struct data_read read_buff;
+int adr=1;
 
-void read_data()
+//struct data buff_data;
+void init(){
+
+}
+void read_data(char *data_, int count_byte, struct data_read* read_buff)
 {
    if (count_byte>0){
-      memcpy(read_buff.buff[read_buff.count], data, count_byte);
-      read_buff.count+=count_byte; count_byte=0;
+      for(int i=0; i<count_byte; i++ )  {
+        read_buff->buff[i+read_buff->count]=data_[i];
+      }
+      read_buff->count+=count_byte;
    }
-   read_buff.time++;
 }
 
-int process_read_data(){
-    if(read_buff.count>0){
-        if(read_buff.buff[0]==1 && read_buff.buff[1]==2 && read_buff.buff[2]==3 && read_buff.buff[3]==4){
-           if(read_buff.buff[4]>=read_buff.count){
+int process_read_data(struct data_read* read_buff, struct data* buff_data){
+    if(read_buff->count>8){
+        if( (read_buff->buff[0]==1) && (read_buff->buff[1]==2) && (read_buff->buff[2]==3) && (read_buff->buff[3]==4) ){
+           if(read_buff->buff[4]<=read_buff->count){
+               if(read_buff->buff[6]==adr){
+                 // printf("crc %d \n",crc(&read_buff->buff, read_buff->buff[4]-1));
+                  if(crc(&read_buff->buff, read_buff->buff[4]-1)==read_buff->buff[read_buff->buff[4]-1]) {
+                      for(int i=0; i< read_buff->buff[4]-8; i++){
+                        buff_data->buff[i]=read_buff->buff[i+7];
+                      }
+                      //memcpy(&buff_data->buff, &read_buff->buff[7], read_buff->buff[4]-8);
+                      buff_data->adr_source= read_buff->buff[5];
+                      buff_data->count =read_buff->buff[4]-8;
 
-           }else{
-             if(read_buff.time>10){
-                read_buff.count=0;
-                return -2;
-             } else{
-               return 1;
-             }
+                  }else{ read_buff->count=0;}
+               } else{ read_buff->count=0;}
+               read_buff->count-= read_buff->buff[4];
+               memcpy(&read_buff->buff[0], &read_buff->buff[read_buff->buff[4]], read_buff->count);
            }
         }else{
-          read_buff.count=0; return -1;
+          read_buff->count=0;
         }
     }else {return 0;}
+    if(read_buff->count>0){
+      read_buff->time++;
+      if(read_buff->time>10){
+        read_buff->count=0;
+      }
+    }
+    return 1;
+}
+
+char crc(char *data, int count){
+ char char_var;
+ char_var=data[0];
+ for(int i=1; i<count; i++){
+    char_var ^=data[i];
+ }
+ return char_var;
+}
+
+void set_adr(int data){
+  adr=data;
 }
