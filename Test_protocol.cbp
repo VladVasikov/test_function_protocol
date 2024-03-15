@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="C:/proj/opc_ua/bin/Debug/update/Test_protocol" prefix_auto="1" extension_auto="1" />
+				<Option output="Test_protocol" prefix_auto="1" extension_auto="1" />
 				<Option object_output="bin/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Transfer_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Transfer_data.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

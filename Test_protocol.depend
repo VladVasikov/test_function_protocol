@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1710474244 source:/home/vlad/proj/test_function_protocol-main/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"Transfer_data.h"
+
+1710327891 /home/vlad/proj/test_function_protocol-main/Transfer_data.h
+
+1710474157 source:/home/vlad/proj/test_function_protocol-main/Transfer_data.c
+	"Transfer_data.h"
+
